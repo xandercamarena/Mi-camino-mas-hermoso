@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felices 10 Meses Mi Amor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --wine: #722f37;
+            --gold: #d4af37;
+            --parchment: #f4ecd8;
+            --dark-brown: #2b1b17;
+            --vintage-rose: #c48b9f;
+        }
+
+        /* Ocultar el cursor original para usar el personalizado en desktop */
+        @media (pointer: fine) {
+            body { cursor: none; }
+            a, button, .flip-card, #music-player, .wax-seal { cursor: none !important; }
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: var(--parchment);
+            color: var(--dark-brown);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.05"/%3E%3C/svg%3E');
+        }
+
+        .title-font { font-family: 'Playfair Display', serif; }
+        .romantic-font { font-family: 'Great Vibes', cursive; }
+
+        /* Cursor Personalizado Dorado */
+        #custom-cursor {
+            width: 8px; height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--gold);
+            transition: transform 0.1s ease;
+        }
+        #custom-cursor-ring {
+            width: 30px; height: 30px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: top 0.1s ease, left 0.1s ease, width 0.2s, height 0.2s, border-color 0.2s;
+        }
+        .cursor-hover {
+            transform: translate(-50%, -50%) scale(2) !important;
+            background: var(--wine) !important;
+        }
+        .cursor-ring-hover {
+            width: 50px !important; height: 50px !important;
+            border-color: var(--wine) !important;
+            background: rgba(114, 47, 55, 0.1);
+        }
+
+        /* Clases para animación al hacer scroll (Intersection Observer) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-left.active, .reveal-right.active { transform: translateX(0); }
+
+        .section-page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            min-height: 100vh;
+            padding-top: 6rem;
+            padding-bottom: 4rem;
+        }
+        .section-page.active { display: block; opacity: 1; }
+
+        #welcome-screen {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #2b1b17 0%, #722f37 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; transition: opacity 1.5s ease-in-out, visibility 1.5s;
+            color: var(--parchment);
+        }
+
+        .vintage-border {
+            border: 2px solid var(--gold); padding: 2rem; border-radius: 10px; position: relative;
+        }
+        .vintage-border::before, .vintage-border::after {
+            content: '✿'; position: absolute; color: var(--gold); font-size: 1.5rem; transition: transform 0.5s;
+        }
+        .vintage-border:hover::before { transform: translateX(-50%) rotate(180deg); }
+        .vintage-border:hover::after { transform: translateX(-50%) rotate(-180deg); }
+        .vintage-border::before { top: -15px; left: 50%; transform: translateX(-50%); background: #2b1b17; padding: 0 10px; }
+        .vintage-border::after { bottom: -15px; left: 50%; transform: translateX(-50%); background: #722f37; padding: 0 10px; }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        .btn-vintage {
+            animation: pulse-gold 2s infinite;
+            background-color: transparent; color: var(--gold);
+            border: 1px solid var(--gold); padding: 1rem 2.5rem;
+            font-size: 1.5rem; letter-spacing: 2px; transition: all 0.5s ease;
+            font-family: 'Playfair Display', serif; text-transform: uppercase;
+            position: relative; overflow: hidden;
+        }
+        .btn-vintage::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        .btn-vintage:hover::before { left: 100%; }
+        .btn-vintage:hover { background-color: var(--gold); color: var(--wine); text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+
+        .magic-petal {
+            position: absolute;
+            color: var(--wine);
+            opacity: 0;
+            pointer-events: none;
+            animation: float-petal linear infinite;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+
+        @keyframes float-petal {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
+        }
+
+        .vintage-nav {
+            background: rgba(244, 236, 216, 0.95);
+            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-link {
+            position: relative; color: var(--wine); transition: color 0.3s;
+            text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
+        }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -4px; left: 50%; background-color: var(--gold);
+            transition: all 0.3s ease; transform: translateX(-50%);
+        }
+        .nav-link:hover::after, .nav-link.active-nav::after { width: 100%; }
+        .nav-link:hover, .nav-link.active-nav { color: var(--gold); }
+        
+        #music-player {
+            position: fixed; bottom: 20px; right: 20px; z-index: 100;
+            background: var(--wine); border: 2px solid var(--gold); border-radius: 50px;
+            padding: 5px 15px 5px 5px; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.3s;
+        }
+        #music-player:hover { transform: scale(1.05); }
+
+        .vinyl-record {
+            width: 40px; height: 40px; background: #111; border-radius: 50%;
+            border: 2px solid #333; display: flex; justify-content: center; align-items: center;
+            animation: spin 3s linear infinite; animation-play-state: paused;
+            background-image: repeating-radial-gradient(#111, #111 2px, #222 3px, #222 4px);
+        }
+        .vinyl-record.playing { animation-play-state: running; }
+        .vinyl-center { width: 15px; height: 15px; background: var(--wine); border-radius: 50%; border: 1px solid var(--gold); }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::after {
+            content: ''; position: absolute; width: 4px; background-color: var(--gold);
+            top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 2px;
+        }
+        .timeline-container { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; }
+        .timeline-container::after {
+            content: ''; position: absolute; width: 24px; height: 24px;
+            right: -12px; background-color: var(--parchment); border: 4px solid var(--gold);
+            top: 15px; border-radius: 50%; z-index: 1; transition: all 0.3s;
+        }
+        .timeline-container:hover::after {
+            background-color: var(--wine); box-shadow: 0 0 15px var(--gold); transform: scale(1.2);
+        }
+        .left { left: 0; }
+        .right { left: 50%; }
+        .right::after { left: -12px; }
+        
+        .timeline-content {
+            padding: 20px 30px; background-color: rgba(255,255,255,0.7); position: relative;
+            border-radius: 6px; border: 1px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .timeline-container:hover .timeline-content { transform: translateY(-5px); border-color: var(--wine); }
+
+        @media screen and (max-width: 600px) {
+            .timeline::after { left: 31px; }
+            .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-container::after { left: 19px; }
+            .right { left: 0%; }
+        }
+
+        /* Galería Flip 3D */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .flip-card { background-color: transparent; width: 100%; height: 350px; perspective: 1000px; }
+        .flip-card-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: 8px solid white; border-bottom: 40px solid white;
+        }
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg) scale(1.05); box-shadow: 0 20px 30px rgba(0,0,0,0.3); }
+        .flip-card-front, .flip-card-back {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden; top: 0; left: 0;
+        }
+        .flip-card-front img { width: 100%; height: 100%; object-fit: cover; filter: sepia(40%) contrast(1.1); transition: filter 0.5s; }
+        .flip-card:hover .flip-card-front img { filter: sepia(0%) contrast(1); }
+        .flip-card-back {
+            background: linear-gradient(135deg, var(--wine), #4a1922); color: var(--parchment);
+            transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center;
+            align-items: center; padding: 20px; border: 2px solid var(--gold);
+        }
+
+        .film-strip {
+            background-color: #111; padding: 30px 20px; border-radius: 10px; position: relative;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6); overflow: hidden;
+            background-image: 
+                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.7) 50%),
+                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.7) 50%);
+            background-size: 40px 20px; background-position: left top, left bottom; background-repeat: repeat-x;
+            border-top: 15px solid #111; border-bottom: 15px solid #111;
+        }
+        /* Efecto de proyector antiguo */
+        .projector-light {
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 80%);
+            animation: flicker 0.15s infinite; z-index: 5;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.9; } 50% { opacity: 0.7; } 100% { opacity: 1; }
+        }
+        
+        .video-container {
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+            background: #000; margin-bottom: 20px; border: 2px solid #333; z-index: 10;
+        }
+        .video-container iframe, .video-container video {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            filter: sepia(20%); transition: filter 0.5s;
+        }
+        .video-container:hover video { filter: sepia(0%); }
+
+        /* Carta Interactiva Mejorada */
+        .wax-seal {
+            width: 70px; height: 70px; background: #900; border-radius: 50%;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 8px 15px rgba(0,0,0,0.4);
+            display: flex; justify-content: center; align-items: center;
+            color: #600; font-size: 28px; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .wax-seal::after {
+            content: 'H'; font-family: 'Great Vibes', cursive; color: #500; text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+        }
+        #love-letter:hover .wax-seal { transform: translate(-50%, -50%) scale(1.1); box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 12px 20px rgba(0,0,0,0.5); }
+        .letter-container.open .wax-seal { opacity: 0; transform: translate(-50%, -50%) scale(3); filter: blur(5px); }
+
+        .old-paper {
+            background: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.1"/%3E%3C/svg%3E'), #fff8dc;
+            border: 1px solid #d4af37; box-shadow: 4px 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        /* Contenedor del reloj con efecto 3D */
+        #clock-container {
+            transition: transform 0.1s;
+            transform-style: preserve-3d;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Cursores personalizados -->
+    <div id="custom-cursor" class="hidden md:block"></div>
+    <div id="custom-cursor-ring" class="hidden md:block"></div>
+
+    <audio id="bg-music" loop>
+        <source src="music/Eresmivida.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-player" onclick="toggleMusic()" style="display: none;" class="hover-trigger">
+        <div class="vinyl-record" id="vinyl">
+            <div class="vinyl-center"></div>
+        </div>
+        <span class="text-[var(--parchment)] text-xs uppercase tracking-widest font-bold pr-2" id="music-text">Pausar</span>
+    </div>
+
+    <!-- Pantalla de Bienvenida -->
+    <div id="welcome-screen">
+        <div class="vintage-border text-center max-w-2xl mx-4">
+            <p class="title-font text-xl md:text-2xl text-[var(--gold)] mb-4 tracking-[0.3em] uppercase">Una historia de amor</p>
+            <h1 class="text-6xl md:text-8xl romantic-font mb-8 text-white drop-shadow-lg">
+                10 Meses
+            </h1>
+            <p class="text-lg md:text-xl font-light mb-12 italic text-gray-300">
+                "Por favor, enciende el volumen para vivir la experiencia completa."
+            </p>
+            <button id="start-btn" class="btn-vintage hover-trigger">
+                Abrir Capítulo <i class="fas fa-key ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Fondo Mágico (Pétalos) -->
+    <div id="magic-container" class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden"></div>
+
+    <nav id="main-nav" class="fixed w-full top-0 z-50 vintage-nav hidden transition-opacity duration-1000">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="text-3xl romantic-font font-bold text-[var(--wine)] drop-shadow-sm flex items-center gap-2">
+                    <i class="fas fa-heart text-[var(--gold)] text-xl animate-pulse"></i> Amor Mío
+                </div>
+                
+                <div class="hidden md:flex space-x-6 title-font font-bold">
+                    <button onclick="showSection('inicio')" class="nav-link active-nav hover-trigger">El Inicio</button>
+                    <button onclick="showSection('historia')" class="nav-link hover-trigger">Historia</button>
+                    <button onclick="showSection('galeria')" class="nav-link hover-trigger">Recuerdos</button>
+                    <button onclick="showSection('cine')" class="nav-link hover-trigger">Cine</button>
+                    <button onclick="showSection('carta')" class="nav-link hover-trigger">Cartas</button>
+                    <button onclick="showSection('futuro')" class="nav-link hover-trigger">Promesa</button>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-[var(--wine)] focus:outline-none hover-trigger" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-[var(--parchment)] border-t border-[var(--gold)] pb-4 shadow-lg absolute w-full">
+            <div class="flex flex-col space-y-3 px-4 pt-4 title-font text-center font-bold">
+                <button onclick="showSection('inicio'); toggleMobileMenu()" class="nav-link py-2 border-b border-[var(--gold)] hover-trigger">El Inicio</button>
+                <button onclick="showSection('historia'); toggleMobileMenu()" class="nav-link py-2 border-b border-[var(--gold)] hover-trigger">Historia</button>
+                <button onclick="showSection('galeria'); toggleMobileMenu()" class="nav-link py-2 border-b border-[var(--gold)] hover-trigger">Recuerdos</button>
+                <button onclick="showSection('cine'); toggleMobileMenu()" class="nav-link py-2 border-b border-[var(--gold)] hover-trigger">Cine</button>
+                <button onclick="showSection('carta'); toggleMobileMenu()" class="nav-link py-2 border-b border-[var(--gold)] hover-trigger">Cartas</button>
+                <button onclick="showSection('futuro'); toggleMobileMenu()" class="nav-link py-2 hover-trigger">Promesa</button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="hidden">
+        
+        <section id="inicio" class="section-page active max-w-5xl mx-auto px-4">
+            <div class="text-center mt-10 md:mt-16 reveal">
+                <div class="inline-block border-y-2 border-[var(--gold)] py-2 px-8 mb-6">
+                    <p class="title-font text-[var(--wine)] tracking-[0.2em] uppercase font-bold">Celebrando nuestro tiempo</p>
+                </div>
+                <h1 class="text-6xl md:text-8xl romantic-font mb-4 text-[var(--wine)] drop-shadow-sm">Felices 10 Meses</h1>
+                <p class="text-2xl md:text-3xl italic mb-16 text-[var(--dark-brown)]">"Cada segundo a tu lado vale oro."</p>
+                
+                <!-- Reloj Interactivo 3D -->
+                <div id="clock-container" class="old-paper rounded-lg p-10 shadow-2xl max-w-4xl mx-auto border-2 border-[var(--gold)] relative reveal">
+                    <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-[var(--parchment)] px-4 rounded-full border border-[var(--gold)]">
+                        <i class="fas fa-hourglass-half text-[var(--gold)] text-3xl animate-pulse py-1" id="hourglass-icon"></i>
+                    </div>
+                    
+                    <h2 class="text-4xl title-font mb-2 text-center text-[var(--wine)] font-bold">¡Ya cumplimos!</h2>
+                    <p class="text-center text-lg text-[var(--dark-brown)] mb-8 italic">Y la cuenta sigue sumando cada momento a tu lado...</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="time-counter">
+                        <div class="flex flex-col items-center border-r border-[var(--gold)] last:border-0 hover:scale-110 transition-transform">
+                            <span class="text-6xl md:text-7xl title-font text-[var(--wine)] font-bold transition-all duration-300" id="months">0</span>
+                            <span class="uppercase tracking-widest text-sm mt-2 font-bold text-[var(--gold)]">Meses</span>
+                        </div>
+                        <div class="flex flex-col items-center border-r-0 md:border-r border-[var(--gold)] hover:scale-110 transition-transform">
+                            <span class="text-5xl md:text-6xl title-font text-[var(--wine)]" id="days">00</span>
+                            <span class="uppercase tracking-widest text-sm mt-2 font-bold text-[var(--gold)]">Días</span>
+                        </div>
+                        <div class="flex flex-col items-center border-r border-[var(--gold)] hover:scale-110 transition-transform">
+                            <span class="text-5xl md:text-6xl title-font text-[var(--wine)]" id="hours">00</span>
+                            <span class="uppercase tracking-widest text-sm mt-2 font-bold text-[var(--gold)]">Horas</span>
+                        </div>
+                        <div class="flex flex-col items-center hover:scale-110 transition-transform">
+                            <span class="text-5xl md:text-6xl title-font text-[var(--wine)]" id="minutes">00</span>
+                            <span class="uppercase tracking-widest text-sm mt-2 font-bold text-[var(--gold)]">Minutos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="historia" class="section-page max-w-5xl mx-auto px-4">
+            <div class="reveal">
+                <h2 class="text-5xl md:text-7xl romantic-font text-center mb-4 text-[var(--wine)]">Las Páginas de Nuestra Historia</h2>
+                <p class="text-center title-font text-xl mb-12 text-[var(--dark-brown)]">Cómo llegamos hasta aquí...</p>
+                
+                <div class="timeline">
+                    <div class="timeline-container left reveal reveal-left hover-trigger">
+                        <div class="timeline-content">
+                            <h3 class="title-font text-2xl text-[var(--wine)] mb-2 font-bold">El Comienzo</h3>
+                            <p class="italic text-[var(--gold)] mb-2 font-bold">Fecha: [Día que me diste el si🥹]</p>
+                            <p class="text-lg">Aquel día en que nuestras miradas se cruzaron. Aún recuerdo exactamente lo que llevabas puesto y cómo aceleraste mi corazón sin saberlo.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-container right reveal reveal-right hover-trigger">
+                        <div class="timeline-content">
+                            <h3 class="title-font text-2xl text-[var(--wine)] mb-2 font-bold">Nuestra Primera Cita</h3>
+                            <p class="italic text-[var(--gold)] mb-2 font-bold">Ese día especial</p>
+                            <p class="text-lg">Los nervios, las risas, la magia flotando en el aire. Sabía desde ese momento que quería pasar mucho más tiempo contigo.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-container left reveal reveal-left hover-trigger">
+                        <div class="timeline-content">
+                            <h3 class="title-font text-2xl text-[var(--wine)] mb-2 font-bold">El Primer Beso</h3>
+                            <p class="italic text-[var(--gold)] mb-2 font-bold">Un instante eterno</p>
+                            <p class="text-lg">El mundo se detuvo. Sentí que estaba en una de esas películas clásicas de romance, pero la protagonista eras tú.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-container right reveal reveal-right hover-trigger">
+                        <div class="timeline-content">
+                            <h3 class="title-font text-2xl text-[var(--wine)] mb-2 font-bold">Hoy: 10 Meses</h3>
+                            <p class="italic text-[var(--gold)] mb-2 font-bold">El presente maravilloso que solo quiero vivir a tu lado</p>
+                            <p class="text-lg">300 días increíbles llenos de aventuras, aprendizajes y un amor que madura como el buen vino.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="galeria" class="section-page max-w-6xl mx-auto px-4">
+            <div class="reveal">
+                <h2 class="text-5xl md:text-7xl romantic-font text-center mb-4 text-[var(--wine)]">Nuestros momentos unicos🥺</h2>
+                <p class="text-center title-font text-xl mb-12 text-[var(--dark-brown)]"><i class="fas fa-hand-sparkles mr-2 text-[var(--gold)]"></i>Pasa el cursor o toca cada foto para descubrir un secreto.</p>
+                
+                <div class="gallery-grid">
+                    <div class="flip-card reveal hover-trigger" style="transition-delay: 0.1s;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="photos/Foto 1.jpeg" alt="Foto 1" onerror="this.src='foto 1.jpg'">
+                            </div>
+                            <div class="flip-card-back">
+                                <h3 class="romantic-font text-4xl mb-4 text-[var(--gold)]">Mi luz</h3>
+                                <p class="text-xl title-font italic">Amo cómo tus ojos brillan cuando sonríes. Es mi paisaje favorito.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flip-card reveal hover-trigger" style="transition-delay: 0.2s;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="photos/Foto 5.jpeg" alt="Foto 2" onerror="this.src='foto 5.jpg'">
+                            </div>
+                            <div class="flip-card-back">
+                                <h3 class="romantic-font text-4xl mb-4 text-[var(--gold)]">Aventuras</h3>
+                                <p class="text-xl title-font italic">Cada viaje, caminata o salida contigo se convierte en una historia unica.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card reveal hover-trigger" style="transition-delay: 0.3s;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="photos/Foto 3.jpeg" alt="Foto 3" onerror="this.src='foto 3.jpg'">
+                            </div>
+                            <div class="flip-card-back">
+                                <h3 class="romantic-font text-4xl mb-4 text-[var(--gold)]">Tu locura</h3>
+                                <p class="text-xl title-font italic">Me encanta que podamos ser nosotros mismos, con nuestras bromas y locuras.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card reveal hover-trigger" style="transition-delay: 0.4s;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="photos/Foto 4.jpeg" alt="Foto 4" onerror="this.src='foto 4.jpg'">
+                            </div>
+                            <div class="flip-card-back">
+                                <h3 class="romantic-font text-4xl mb-4 text-[var(--gold)]">Paz</h3>
+                                <p class="text-xl title-font italic">Tus brazos son el lugar donde todos mis miedos desaparecen. Eres mi hogar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cine" class="section-page max-w-4xl mx-auto px-4">
+            <div class="reveal">
+                <h2 class="text-5xl md:text-7xl romantic-font text-center mb-4 text-[var(--wine)]">Nuestro Cine Privado</h2>
+                <p class="text-center title-font text-xl mb-12 text-[var(--dark-brown)]">Toma asiento y disfruta de la función de nuestra vida.</p>
+                
+                <div class="film-strip reveal hover-trigger">
+                    <div class="projector-light"></div> <!-- Efecto de luz parpadeante -->
+                    
+                    <div class="video-container">
+                        <video controls poster="VIDEO/VIDEO 1.mp4" style="object-fit: cover;" class="hover-trigger">
+                            <source src="VIDEO/VIDEO 1.mp4" type="video/mp4">
+                            Tu navegador no soporta videos.
+                        </video>
+                </div>
+            </div>
+        </section>
+
+        <section id="carta" class="section-page max-w-5xl mx-auto px-4 flex flex-col justify-center items-center">
+            <div class="reveal w-full max-w-2xl">
+                <h2 class="text-5xl md:text-7xl romantic-font text-center mb-4 text-[var(--wine)]">Correspondencia</h2>
+                <p class="text-center title-font text-xl mb-12 text-[var(--dark-brown)]">(Toca el sello para abrir la carta)</p>
+                
+                <div class="relative cursor-pointer transition-transform hover:scale-105 duration-300 mx-auto letter-container hover-trigger" id="love-letter" style="width: 100%; height: 450px;">
+                    <!-- Sobre Cerrado -->
+                    <div class="absolute inset-0 old-paper flex justify-center items-center rounded-sm z-20 transition-all duration-1000 envelope-cover" style="transform-origin: top;">
+                        <div class="wax-seal hover-trigger"></div>
+                        <div class="absolute inset-4 border border-[var(--gold)] opacity-50"></div>
+                        <div class="absolute inset-0" style="background: linear-gradient(to bottom right, transparent 49%, var(--gold) 50%, transparent 51%); opacity: 0.3;"></div>
+                        <div class="absolute inset-0" style="background: linear-gradient(to top right, transparent 49%, var(--gold) 50%, transparent 51%); opacity: 0.3;"></div>
+                    </div>
+                    
+                    <!-- Contenido de la Carta -->
+                    <div class="absolute inset-0 old-paper p-8 overflow-y-auto z-10 letter-content opacity-0 transition-all duration-1000 transform scale-95" style="box-shadow: inset 0 0 50px rgba(114, 47, 55, 0.1);">
+                        <h3 class="romantic-font text-5xl mb-6 text-center text-[var(--wine)] border-b border-[var(--gold)] pb-4 inline-block mx-auto w-full">Amada mía,</h3>
+                        
+                        <div class="text-xl leading-relaxed space-y-4 title-font text-gray-800">
+                            <p>Si estuviera en otra época, te escribiría esta carta con pluma y tintero a la luz de una vela. Pero aunque los tiempos cambien, el sentimiento de encontrar al amor de tu vida sigue siendo el mismo.</p>
+                            
+                            <p>Estos 10 meses a tu lado se sienten como un suspiro y a la vez como si te conociera de mil vidas pasadas. Has traído luz, color y una paz inmensa a mis días.</p>
+                            
+                            <p>Quería regalarte algo diferente hoy, algo donde pudiera guardar un pedacito de nosotros. Porque mereces que el mundo entero sepa lo maravillosa que eres.</p>
+                            
+                            <p>Gracias por dejarme ser el guardián de tu corazón.</p>
+                        </div>
+                        
+                        <p class="romantic-font text-right text-4xl font-bold mt-12 text-[var(--wine)]">Por siempre tuyo,<br>[Tu futuro esposito🥹❤️]</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="futuro" class="section-page max-w-4xl mx-auto px-4 text-center flex flex-col justify-center items-center min-h-[80vh]">
+            <div class="reveal old-paper p-12 rounded-lg shadow-2xl border-4 border-double border-[var(--gold)] relative overflow-hidden group">
+                <div class="absolute inset-0 bg-[var(--gold)] opacity-0 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none"></div>
+                
+                <i class="fas fa-gem text-5xl text-[var(--wine)] mb-6 animate-bounce"></i>
+                <h2 class="text-5xl md:text-7xl romantic-font mb-6 text-[var(--dark-brown)]">Una Promesa Eterna</h2>
+                <p class="text-2xl title-font text-gray-800 mb-8 leading-relaxed">
+                    10 meses es apenas el comienzo de nuestro libro.<br>
+                    Prometo amarte a la antigua: con respeto, con amor y con todo mi ser.
+                </p>
+                
+                <div class="mt-8 relative z-10">
+                    <p class="title-font text-xl text-[var(--wine)] mb-6 font-bold uppercase tracking-widest">¿Caminamos hacia el mes 11?</p>
+                    <button onclick="createGoldenRain()" class="btn-vintage hover-trigger">
+                        <span>Acepto, Mi Amor</span>
+                    </button>
+                </div>
+                
+                <div id="golden-rain-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Variables principales
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainContent = document.getElementById('main-content');
+        const mainNav = document.getElementById('main-nav');
+        const startBtn = document.getElementById('start-btn');
+        const bgMusic = document.getElementById('bg-music');
+        const musicPlayer = document.getElementById('music-player');
+        const vinyl = document.getElementById('vinyl');
+        const musicText = document.getElementById('music-text');
+        
+        let isMusicPlaying = false;
+
+        // Configuración de la Fecha de Aniversario (AÑO, MES(0-11), DIA)
+        const startDate = new Date(2025, 9, 20, 0, 0, 0); 
+
+        // Botón Iniciar
+        startBtn.addEventListener('click', () => {
+            bgMusic.volume = 0.5;
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                vinyl.classList.add('playing');
+                musicPlayer.style.display = 'flex';
+            }).catch(e => console.log("Autoplay bloqueado", e));
+            
+            welcomeScreen.style.opacity = '0';
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                mainNav.classList.remove('hidden');
+                setTimeout(() => { mainNav.style.opacity = '1'; }, 100);
+                
+                // Iniciar la animación del contador de meses
+                animateCounter();
+                
+                // Activar observer al iniciar
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            }, 1500);
+        });
+
+        // Control de Música
+        window.toggleMusic = function() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                vinyl.classList.remove('playing');
+                musicText.innerText = "Reproducir";
+            } else {
+                bgMusic.play();
+                vinyl.classList.add('playing');
+                musicText.innerText = "Pausar";
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // Navegación SPA
+        window.showSection = function(sectionId) {
+            const sections = document.querySelectorAll('.section-page');
+            sections.forEach(sec => {
+                sec.classList.remove('active');
+                // Resetear reveals para que vuelvan a animarse
+                const reveals = sec.querySelectorAll('.reveal.active');
+                reveals.forEach(r => r.classList.remove('active'));
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active-nav'));
+
+            const targetSection = document.getElementById(sectionId);
+            if(targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Re-observar elementos en la nueva sección
+                setTimeout(() => {
+                    targetSection.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+                }, 100);
+            }
+
+            const activeLinks = document.querySelectorAll(`button[onclick*="'${sectionId}'"]`);
+            activeLinks.forEach(link => link.classList.add('active-nav'));
+        }
+
+        window.toggleMobileMenu = function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        let isCounterAnimated = false;
+
+        // Cálculo exacto usando los meses del calendario real
+        function getExactTime() {
+            const now = new Date();
+            let m = (now.getFullYear() - startDate.getFullYear()) * 12;
+            m -= startDate.getMonth();
+            m += now.getMonth();
+            
+            let d = now.getDate() - startDate.getDate();
+            if (d < 0) {
+                m--;
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                d += prevMonth.getDate();
+            }
+            return { months: m, days: d, hours: now.getHours(), minutes: now.getMinutes() };
+        }
+
+        function animateCounter() {
+            const time = getExactTime();
+            const targetMonths = time.months;
+            
+            let currentMonth = 0;
+            const monthEl = document.getElementById('months');
+            
+            document.getElementById('days').innerText = '00';
+            document.getElementById('hours').innerText = '00';
+            document.getElementById('minutes').innerText = '00';
+            
+            const interval = setInterval(() => {
+                if (currentMonth >= targetMonths) {
+                    clearInterval(interval);
+                    isCounterAnimated = true;
+                    updateCounter(); // Iniciar reloj normal tras la animación
+                    setInterval(updateCounter, 60000); // Actualizar cada minuto
+                    
+                    // Efecto visual de celebración al terminar de contar
+                    monthEl.classList.add('text-[var(--gold)]', 'scale-125');
+                    const icon = document.getElementById('hourglass-icon');
+                    if(icon) {
+                        icon.classList.remove('animate-pulse');
+                        icon.classList.add('fa-spin');
+                    }
+                    setTimeout(() => {
+                        monthEl.classList.remove('text-[var(--gold)]', 'scale-125');
+                        if(icon) {
+                            icon.classList.remove('fa-spin');
+                            icon.classList.add('animate-pulse');
+                        }
+                    }, 1200);
+                } else {
+                    currentMonth++;
+                    monthEl.innerText = currentMonth;
+                }
+            }, 150); // Velocidad de la animación (150ms)
+        }
+
+        // Reloj del tiempo
+        function updateCounter() {
+            if (!isCounterAnimated) return; // Esperar a que termine la animación
+            
+            const time = getExactTime();
+
+            document.getElementById('months').innerText = time.months > 0 ? time.months : 0;
+            document.getElementById('days').innerText = time.days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = time.hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = time.minutes.toString().padStart(2, '0');
+        }
+
+        // INTERACTIVIDAD 1: Cursor Personalizado
+        const cursor = document.getElementById('custom-cursor');
+        const cursorRing = document.getElementById('custom-cursor-ring');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            // Retraso suave para el anillo
+            setTimeout(() => {
+                cursorRing.style.left = e.clientX + 'px';
+                cursorRing.style.top = e.clientY + 'px';
+            }, 50);
+        });
+
+        // Hover effects para el cursor
+        const hoverTriggers = document.querySelectorAll('.hover-trigger, button, a, .flip-card');
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => {
+                cursor.classList.add('cursor-hover');
+                cursorRing.classList.add('cursor-ring-hover');
+            });
+            trigger.addEventListener('mouseleave', () => {
+                cursor.classList.remove('cursor-hover');
+                cursorRing.classList.remove('cursor-ring-hover');
+            });
+        });
+
+        // INTERACTIVIDAD 2: Scroll Reveal Animations (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Solo animar una vez por visualización
+                }
+            });
+        }, observerOptions);
+
+        // INTERACTIVIDAD 3: Reloj 3D sensible al ratón
+        const clockContainer = document.getElementById('clock-container');
+        document.addEventListener('mousemove', (e) => {
+            if(document.getElementById('inicio').classList.contains('active')) {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+                clockContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+
+        // INTERACTIVIDAD 4: Carta de Amor mejorada
+        const loveLetter = document.getElementById('love-letter');
+        loveLetter.addEventListener('click', function() {
+            if(this.classList.contains('open')) return;
+            
+            const cover = this.querySelector('.envelope-cover');
+            const content = this.querySelector('.letter-content');
+            
+            // Efecto de temblor antes de abrir
+            this.style.transform = 'scale(1.05) rotate(2deg)';
+            setTimeout(() => this.style.transform = 'scale(1.05) rotate(-2deg)', 100);
+            setTimeout(() => this.style.transform = 'scale(1.05) rotate(0)', 200);
+            
+            setTimeout(() => {
+                this.classList.add('open');
+                cover.style.transform = 'rotateX(90deg)'; // Simula que la solapa se abre
+                
+                setTimeout(() => {
+                    cover.style.display = 'none';
+                    content.style.opacity = '1';
+                    content.style.transform = 'scale(1)';
+                    content.style.zIndex = '30';
+                }, 800);
+            }, 400);
+        });
+
+        // INTERACTIVIDAD 5: Pétalos cayendo (Reemplaza al polvo mágico)
+        function createPetals() {
+            const container = document.getElementById('magic-container');
+            const symbols = ['❦', '♥', '✿']; // Símbolos románticos
+            
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.classList.add('magic-petal');
+                petal.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                petal.style.left = Math.random() * 100 + 'vw';
+                const size = Math.random() * 1.5 + 0.8;
+                petal.style.fontSize = size + 'rem';
+                
+                petal.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                
+                container.appendChild(petal);
+                setTimeout(() => { petal.remove(); }, 25000);
+            }, 800); 
+        }
+        createPetals();
+
+        // Efecto Final: Lluvia Dorada
+        window.createGoldenRain = function() {
+            const container = document.getElementById('golden-rain-container');
+            container.innerHTML = ''; 
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const spark = document.createElement('div');
+                    const symbols = ['✦', '✨', '♥', '♦'];
+                    spark.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                    spark.style.position = 'absolute';
+                    spark.style.color = '#d4af37'; 
+                    spark.style.fontSize = (Math.random() * 25 + 10) + 'px';
+                    spark.style.left = (Math.random() * 100) + 'vw';
+                    spark.style.top = '-50px';
+                    spark.style.zIndex = '9999';
+                    spark.style.textShadow = '0 0 15px rgba(212, 175, 55, 1)';
+                    
+                    container.appendChild(spark);
+                    
+                    let posY = -50;
+                    let speed = Math.random() * 4 + 2;
+                    let sway = 0;
+                    let swaySpeed = Math.random() * 0.05;
+                    
+                    const fall = () => {
+                        posY += speed;
+                        sway += swaySpeed;
+                        const posX = Math.sin(sway) * 60; 
+                        
+                        spark.style.transform = `translate(${posX}px, ${posY}px) rotate(${posY * 2}deg)`;
+                        
+                        if (posY < window.innerHeight + 50) {
+                            requestAnimationFrame(fall);
+                        } else {
+                            spark.remove();
+                        }
+                    };
+                    requestAnimationFrame(fall);
+                }, i * 80);
+            }
+            
+            setTimeout(() => {
+                const messageBox = document.createElement('div');
+                messageBox.innerHTML = `
+                    <div style="position: fixed; inset: 0; background: rgba(43, 27, 23, 0.85); display: flex; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(8px);">
+                        <div class="old-paper" style="padding: 4rem; border: 2px solid #d4af37; border-radius: 5px; text-align: center; max-width: 90%; transform: scale(0); transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                            <i class="fas fa-heart text-[var(--wine)] text-4xl mb-4 animate-pulse"></i>
+                            <h2 style="font-family: 'Great Vibes', cursive; font-size: 5rem; color: #722f37; margin-bottom: 1rem; line-height: 1;">Te Amo Infinitamente</h2>
+                            <p style="font-family: 'Playfair Display', serif; margin-bottom: 2.5rem; color: #2b1b17; font-size: 1.3rem; font-style: italic;">"Eres y siempre serás mi decisión más hermosa."</p>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background: transparent; color: #722f37; border: 1px solid #722f37; padding: 12px 45px; text-transform: uppercase; letter-spacing: 3px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#722f37'; this.style.color='#f4ecd8';" onmouseout="this.style.background='transparent'; this.style.color='#722f37';">Sellar Promesa</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(messageBox);
+                
+                setTimeout(() => {
+                    messageBox.children[0].children[0].style.transform = 'scale(1)';
+                }, 100);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
